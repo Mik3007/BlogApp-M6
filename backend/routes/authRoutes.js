@@ -51,29 +51,23 @@ router.get("/me", authMiddleware, (req, res) => {
 });
 
 // Rotta per iniziare il processo di autenticazione Google
-router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 // Rotta di callback per l'autenticazione Google
-router.get(
-  "/google/callback",
-  passport.authenticate("google", { failureRedirect: `${FRONTEND_URL}/login` }),
-  async (req, res) => {
-    try {
-      // Genera un JWT (JSON Web Token) per l'utente autenticato
-      const token = await generateJWT({ id: req.user._id });
-
-      // Reindirizza l'utente al frontend, passando il token come parametro URL
-      res.redirect(`${FRONTEND_URL}/?token=${token}`);
-    } catch (error) {
-      // Se c'è un errore nella generazione del token, lo logghiamo
-      console.error("Errore nella generazione del token:", error);
-      // E reindirizziamo l'utente alla pagina di login con un messaggio di errore
-      res.redirect("/login?error=auth_failed");
-    }
-  }
+router.get('/google/callback', 
+  passport.authenticate('google', { failureRedirect: `${FRONTEND_URL}/login` }),
+  handleAuthCallback
 );
+// Funzione helper per gestire il callback di autenticazione
+async function handleAuthCallback(req, res) {
+  try {
+    const token = await generateJWT({ id: req.user._id });
+    // Usa FRONTEND_URL per il reindirizzamento
+    res.redirect(`${FRONTEND_URL}/login?token=${token}`);
+  } catch (error) {
+    console.error('Errore nella generazione del token:', error);
+    res.redirect(`${FRONTEND_URL}/login?error=auth_failed`);
+  }
+}
 
 export default router;
