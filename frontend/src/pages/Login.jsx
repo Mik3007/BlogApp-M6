@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { loginUser, getPosts } from "../services/api";
 import { motion } from "framer-motion"; // Importa motion per animazioni
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+
 export default function Login() {
   // Stato per memorizzare i dati login
   const [formData, setFormData] = useState({
@@ -55,7 +57,7 @@ export default function Login() {
 
   // Gestore per il login con Google
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3001/api/auth/google"; // Reindirizza l'utente al processo di autenticazione Google
+    window.location.href = `${API_URL}/api/auth/google`;
   };
 
   // Rendering del componente
