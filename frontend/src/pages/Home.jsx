@@ -1,12 +1,11 @@
-// Importa gli hook necessari da React
-import { useState, useEffect } from "react";
-// Importa Link da react-router-dom per la navigazione
-import { Link } from "react-router-dom";
-// Importo la funzione getPosts dal mio file services/api
+import { useEffect } from "react";
+// Importa Link e useLocation da react-router-dom per la navigazione e l'accesso alla posizione corrente
+import { Link, useLocation } from "react-router-dom";
 import { getPosts } from "../services/api";
-import { useLocation } from 'react-router-dom';
+// Importa motion per animazioni da framer-motion
 import { motion } from "framer-motion";
 
+// Varianti animazione frameMotion
 const heroVariants = {
   hidden: { opacity: 0, y: -50 },
   visible: {
@@ -14,15 +13,16 @@ const heroVariants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: "easeOut"
-    }
-  }
+      ease: "easeOut",
+    },
+  },
 };
 
+// Varianti animazione frameMotion
 const cardVariants = {
   offscreen: {
     y: 50,
-    opacity: 0
+    opacity: 0,
   },
   onscreen: {
     y: 0,
@@ -30,11 +30,12 @@ const cardVariants = {
     transition: {
       type: "spring",
       bounce: 0.4,
-      duration: 0.8
-    }
-  }
+      duration: 0.8,
+    },
+  },
 };
 
+// Componente per visualizzare una card del post
 function PostCard({ post }) {
   return (
     <motion.div
@@ -46,16 +47,26 @@ function PostCard({ post }) {
     >
       <Link
         to={`/post/${post._id}`}
-        className="block bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-400 h-full  hover:scale-[1.1] hover:duration-700"
+        className="block bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-400 h-full hover:scale-[1.1] hover:duration-700"
       >
         <img
           src={post.cover}
           alt={post.title}
-          className="w-full h-64 object-cover"  // Aumentata l'altezza dell'immagine
+          className="w-full h-64 object-cover"
         />
         <div className="p-6">
-          <h2 className="text-2xl font-semibold mb-3 truncate" title={post.title}>{post.title}</h2>
-          <p className="text-gray-600 truncate" title={`Autore: ${post.author}`}>Autore: {post.author}</p>
+          <h2
+            className="text-2xl font-semibold mb-3 truncate"
+            title={post.title}
+          >
+            {post.title}
+          </h2>
+          <p
+            className="text-gray-600 truncate"
+            title={`Autore: ${post.author}`}
+          >
+            Autore: {post.author}
+          </p>
         </div>
       </Link>
     </motion.div>
@@ -63,28 +74,26 @@ function PostCard({ post }) {
 }
 
 export default function Home({ posts, setPosts }) {
-  const location = useLocation();
-  // Effect hook per fetchare i post quando il componente viene montato
+  // Effetto per recuperare i post quando il componente viene montato
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        // Effettua una richiesta GET al backend per ottenere tutti i post
+        // Recupera tutti i post dal backend
         const response = await getPosts();
         // Aggiorna lo stato con i dati dei post
         setPosts(response.data);
       } catch (error) {
         // Logga eventuali errori nella console
-        console.error("Errore nella fetch del post:", error);
+        console.error("Errore nella fetch dei post:", error);
       }
     };
-    // Chiamiamo la funzione fetchPosts
     fetchPosts();
-  }, []); // L'array vuoto come secondo argomento significa che questo effect si esegue solo al montaggio del componente
+  }, []);
 
   // Rendering del componente
   return (
     <div className="font-serif min-h-screen">
-      <motion.div 
+      <motion.div
         className="bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 bg-[linear-gradient(to_bottom,#153448,#DFD0B8)] dark:bg-gradient-to-r from-black to-gray-600"
         variants={heroVariants}
         initial="hidden"
@@ -92,7 +101,7 @@ export default function Home({ posts, setPosts }) {
       >
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold italic mb-6 dark:text-white">
-            Blog App 
+            Blog App
           </h1>
           <h3 className="text-2xl mb-8 dark:text-white">
             "Connect, share, inspire. Add your post to our collection of ideas."

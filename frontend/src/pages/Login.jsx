@@ -1,69 +1,64 @@
-import { useState, useEffect } from "react"; // Importa il hook useState da React per gestire lo stato
-import { useNavigate, useLocation } from "react-router-dom"; // Importa useNavigate da react-router-dom per navigare programmaticamente
-import { loginUser, getPosts } from "../services/api"; // Importa la funzione API per effettuare il login
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { loginUser, getPosts } from "../services/api";
+import { motion } from "framer-motion"; // Importa motion per animazioni
 
 export default function Login() {
+  // Stato per memorizzare i dati login
   const [formData, setFormData] = useState({
-    email: "", // Stato iniziale del campo email
-    password: "", // Stato iniziale del campo password
+    email: "",
+    password: "",
   });
-  const navigate = useNavigate(); // Inizializza il navigatore per cambiare pagina
-  const location = useLocation(); // Per accedere ai parametri dell'URL corrente
 
+  const navigate = useNavigate();
   useEffect(() => {
-    // Questo effect viene eseguito dopo il rendering del componente
-    // e ogni volta che location o navigate cambiano
-
-    // Estraiamo i parametri dall'URL
+    // Effetto per gestire il token presente nell'URL
     const params = new URLSearchParams(location.search);
-    // Cerchiamo un parametro 'token' nell'URL
     const token = params.get("token");
 
     if (token) {
-      console.log("Token ricevuto:", token);
-      // Se troviamo un token, lo salviamo nel localStorage
+      // Se è presente un token nell'URL, salvalo nel localStorage e naviga alla home page
       localStorage.setItem("token", token);
-      // Dispatchamo un evento 'storage' per aggiornare altri componenti che potrebbero dipendere dal token
       window.dispatchEvent(new Event("storage"));
-      // Navighiamo alla home page
       navigate("/home");
     }
-  }, [location, navigate]); // Questo effect dipende da location e navigate
+  }, [navigate]); // Esegui l'effetto quando cambia navigate
 
-  // Gestore del cambiamento degli input del form
+  // Gestore per il cambiamento degli input del form
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value }); // Aggiorna lo stato del form con i valori degli input
+    setFormData({ ...formData, [e.target.name]: e.target.value }); // Aggiorna lo stato del form
   };
 
-  // Gestore dell'invio del form
+  // Gestore per l'invio del login
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Previene il comportamento predefinito del form di ricaricare la pagina
+    e.preventDefault(); // Previene il comportamento predefinito del form
     try {
-      const response = await loginUser(formData); // Chiama la funzione loginUser per autenticare l'utente
-      localStorage.setItem("token", response.token); // Memorizza il token di autenticazione nel localStorage
-      console.log("Token salvato dopo il login:", response.token);
-      // Trigger l'evento storage per aggiornare la Navbar
-      window.dispatchEvent(new Event("storage")); // Scatena un evento di storage per aggiornare componenti come la Navbar
-      alert("Login effettuato con successo!"); // Mostra un messaggio di successo
+      const response = await loginUser(formData); // Effettua il login
+      localStorage.setItem("token", response.token); // Salva il token nel localStorage
+      window.dispatchEvent(new Event("storage"));
+      alert("Login effettuato con successo!");
+
+      // Recupera i post dopo il login
       try {
         const postsResponse = await getPosts();
-        console.log("Post recuperati dopo il login:", postsResponse.data);
+        console.log("Post recuperati dopo il login:", postsResponse.data); // Stampa i post recuperati nella console
       } catch (error) {
         console.error("Errore nel recupero dei post dopo il login:", error);
       }
-      navigate("/home"); // Naviga alla pagina principale
+
+      navigate("/home"); // Naviga alla home page
     } catch (error) {
-      console.error("Errore durante il login:", error); // Logga l'errore in console
+      console.error("Errore durante il login:", error); // Logga eventuali errori durante il login
       alert("Credenziali non valide. Riprova."); // Mostra un messaggio di errore
     }
   };
 
+  // Gestore per il login con Google
   const handleGoogleLogin = () => {
-    // Reindirizziamo l'utente all'endpoint del backend che inizia il processo di autenticazione Google
-    window.location.href = "http://localhost:3001/api/auth/google";
+    window.location.href = "http://localhost:3001/api/auth/google"; // Reindirizza l'utente al processo di autenticazione Google
   };
 
+  // Rendering del componente
   return (
     <section className="bg-[linear-gradient(to_bottom,#153448,#DFD0B8)] dark:bg-gray-900 dark:bg-gradient-to-r from-black to-gray-600">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">

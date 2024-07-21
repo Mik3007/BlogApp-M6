@@ -16,7 +16,6 @@ export default function Register() {
     dataDiNascita: "",
   });
 
-  // Hook per la navigazione
   const navigate = useNavigate();
 
   // Gestisce il cambio del file avatar

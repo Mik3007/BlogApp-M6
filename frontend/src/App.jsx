@@ -8,7 +8,6 @@ import CreatePost from "./pages/CreatePost";
 import PostDetail from "./pages/PostDetail";
 
 // Importa il file CSS per gli stili dell'App
-import "./App.css";
 import MyFooter from "./components/MyFooter";
 import { useState } from "react";
 import Register from "./pages/Register";

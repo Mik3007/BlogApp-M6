@@ -1,9 +1,7 @@
-// Importa gli hook necessari da React
 import { useState, useEffect } from "react";
-// Importa useParams per accedere ai parametri dell'URL
 import { useParams } from "react-router-dom";
 
-// NEW: Aggiungiamo getComments e addComment alle importazioni
+// Importa le funzioni API necessarie
 import {
   getPost,
   getComments,
@@ -15,12 +13,16 @@ import {
 } from "../services/api";
 
 import { useNavigate } from "react-router-dom";
-import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/solid";
-import { TrashIcon } from "@heroicons/react/24/solid";
-import { PencilIcon } from "@heroicons/react/24/solid";
+// Import delle icone da heroIcons
+import {
+  ChatBubbleOvalLeftEllipsisIcon,
+  TrashIcon,
+  PencilIcon,
+} from "@heroicons/react/24/solid";
 
-//creo una funzione, che se l'immagine di profilo non c'è prende la prima lettera del nome e la usa come avatar.
+// Funzione per visualizzare l'avatar dell'utente
 function AvatarProfilo({ userData }) {
+  // Usa la prima lettera del nome come avatar se l'immagine non è disponibile
   const iniziale = userData?.nome ? userData.nome[0].toUpperCase() : "?";
 
   return (
@@ -39,67 +41,65 @@ function AvatarProfilo({ userData }) {
 }
 
 export default function PostDetail() {
-  // Stato per memorizzare i dati del post
+  // Stati per memorizzare i dati del post, dei commenti e dell'utente
   const [post, setPost] = useState(null);
-  // NEW: Stato per memorizzare i commenti
   const [comments, setComments] = useState([]);
-  // NEW: Stato per il nuovo commento
   const [newComment, setNewComment] = useState({ content: "" });
-  // Stato per verificare se l'utente è loggato
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // Stato per memorizzare i dati dell'utente
   const [userData, setUserData] = useState(null);
-  // Estrae l'id del post dai parametri dell'URL
-  const { id } = useParams();
-  // stato per aprire e chiudere la modale
+
+  // Stati per la gestione delle modali
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // stato per aprire e chiudere la modale per la modifica del post
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editedPost, setEditedPost] = useState({ title: "", content: "" });
+
+  // Ottieni l'ID del post dai parametri dell'URL
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  // Effettua il fetch dei dati del post e dei commenti al caricamento del componente
+  // Effettua il fetch dei dati del post, dei commenti e dei dati dell'utente
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const postData = await getPost(id); // Ottiene i dati del post dall'API
-        setPost(postData); // Imposta i dati del post nello stato
+        const postData = await getPost(id);
+        setPost(postData);
         setEditedPost(postData);
       } catch (error) {
-        console.error("Errore nel caricamento del post:", error); // Logga l'errore in console
+        console.error("Errore nel caricamento del post:", error);
       }
     };
 
     const fetchComments = async () => {
       try {
-        const commentsData = await getComments(id); // Ottiene i commenti del post dall'API
-        setComments(commentsData); // Imposta i commenti nello stato
+        const commentsData = await getComments(id);
+        setComments(commentsData);
       } catch (error) {
-        console.error("Errore nel caricamento dei commenti:", error); // Logga l'errore in console
+        console.error("Errore nel caricamento dei commenti:", error);
       }
     };
 
     const checkAuthAndFetchUserData = async () => {
-      const token = localStorage.getItem("token"); // Recupera il token di autenticazione dalla memoria locale
+      const token = localStorage.getItem("token");
       if (token) {
-        setIsLoggedIn(true); // Imposta lo stato di autenticazione a true
+        setIsLoggedIn(true);
         try {
-          const data = await getUserData(); // Ottiene i dati dell'utente autenticato dall'API
-          setUserData(data); // Imposta i dati dell'utente nello stato
-          fetchComments(); // Carica i commenti del post
+          const data = await getUserData();
+          setUserData(data);
+          fetchComments();
         } catch (error) {
-          console.error("Errore nel recupero dei dati utente:", error); // Logga l'errore in console
-          setIsLoggedIn(false); // Imposta lo stato di autenticazione a false
+          console.error("Errore nel recupero dei dati utente:", error);
+          setIsLoggedIn(false);
         }
       } else {
-        setIsLoggedIn(false); // Imposta lo stato di autenticazione a false
+        setIsLoggedIn(false);
       }
     };
 
-    fetchPost(); // Carica i dati del post al caricamento del componente
-    checkAuthAndFetchUserData(); // Verifica l'autenticazione e carica i dati dell'utente
-  }, [id]); // Effettua nuovamente l'effetto quando l'ID del post cambia
+    fetchPost();
+    checkAuthAndFetchUserData();
+  }, [id]);
 
+  // Gestore per il cambiamento del contenuto del commento
   const handleCommentChange = (e) => {
     const { name, value } = e.target;
     setNewComment((prevComment) => ({
@@ -112,35 +112,33 @@ export default function PostDetail() {
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (!isLoggedIn) {
-      console.error("Devi effettuare il login per commentare."); // Logga un messaggio di errore se l'utente non è loggato
+      console.error("Devi effettuare il login per commentare.");
       return;
     }
     try {
       const commentData = {
-        content: newComment.content, // Contenuto del nuovo commento
-        name: `${userData.nome} ${userData.cognome}`, // Nome dell'utente
-        email: userData.email, // Email dell'utente
+        content: newComment.content,
+        name: `${userData.nome} ${userData.cognome}`,
+        email: userData.email,
       };
-      const newCommentData = await addComment(id, commentData); // Invia il nuovo commento all'API
-      // Genera un ID temporaneo se l'API non restituisce un ID in tempo
+      const newCommentData = await addComment(id, commentData);
       if (!newCommentData._id) {
         newCommentData._id = Date.now().toString();
       }
-      setComments((prevComments) => [...prevComments, newCommentData]); // Aggiunge il nuovo commento alla lista dei commenti
+      setComments((prevComments) => [...prevComments, newCommentData]);
       setNewComment({ content: "" });
-
       setIsModalOpen(false);
     } catch (error) {
       console.error("Errore nell'aggiunta del commento:", error);
     }
   };
 
+  // Gestore per l'eliminazione del post
   const handleDeletePost = async () => {
-    if (!post) return; // Controllo di sicurezza
+    if (!post) return;
     try {
       await deletePost(post._id);
       console.log(`Post eliminato con successo: ${post._id}`);
-      // Reindirizza l'utente alla home page o alla lista dei post
       navigate("/home");
     } catch (error) {
       console.error(
@@ -150,6 +148,7 @@ export default function PostDetail() {
     }
   };
 
+  // Gestore per l'eliminazione di un commento
   const handleDeleteComment = async (commentId) => {
     try {
       await deleteComment(post._id, commentId);
@@ -157,27 +156,30 @@ export default function PostDetail() {
       alert("Commento eliminato con successo");
     } catch (error) {
       console.error(
-        `Errore durante l'eliminazione del post ${comments._id}:`,
+        `Errore durante l'eliminazione del commento ${commentId}:`,
         error
       );
     }
   };
 
+  // Gestore per aprire la modale di modifica del post
   const handleEditClick = () => {
     setEditedPost({ ...post });
     setIsEditModalOpen(true);
   };
 
+  // Gestore per il cambiamento dei dati del post durante la modifica
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditedPost((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Gestore per l'invio delle modifiche al post
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
       await updatePost(id, editedPost);
-      const updatedPostData = await getPost(id); // Ricarica il post dopo l'aggiornamento
+      const updatedPostData = await getPost(id);
       setPost(updatedPostData);
       setEditedPost(updatedPostData);
       setIsEditModalOpen(false);
@@ -186,14 +188,20 @@ export default function PostDetail() {
     }
   };
 
-  // Se il post non è ancora stato caricato, mostra un messaggio di caricamento
-  if (!post) return <div>Caricamento...</div>;
+  // Se il post non è stato caricato, mostra un messaggio di caricamento
+  if (!post) return <div role="status">
+  <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+      <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+  </svg>
+  <span class="sr-only">Loading...</span>
+</div>;
 
   // Rendering del componente
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <article className="bg-white shadow-lg rounded-lg overflow-hidden">
-        {/* Immagine di copertina del post */}
+        {/* Immagine di copertura del post */}
         <img
           src={post.cover}
           alt={post.title}
@@ -244,10 +252,8 @@ export default function PostDetail() {
             ) : (
               <p className="text-gray-600">Ancora nessun commento</p>
             )}
-
-            {/* Div bottoni in flex per metterli in between */}
             <div className="flex justify-between mt-3">
-              {/* Pulsante per aprire il modal dei commenti */}
+              {/* Pulsante per aprire la modale dei commenti */}
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full flex"

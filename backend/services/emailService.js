@@ -20,11 +20,9 @@ export const sendEmail = async (to, subject, htmlContent) => {
   try {
     // Invia l'email usando Mailgun
     const response = await mg.messages().send(data);
-    console.log("Email inviata con successo:", response);
     return response; // Restituisce la risposta di Mailgun
   } catch (error) {
     // Gestione degli errori
-    console.error("Errore nell'invio dell'email:", error);
-    throw error; // Rilancia l'errore per permettere la gestione esterna
+    throw new Error(`Errore nell'invio dell'email: ${error.message}`); // Rilancia l'errore con un messaggio chiaro
   }
 };

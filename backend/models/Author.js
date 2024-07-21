@@ -1,25 +1,29 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-const authorSchema = new mongoose.Schema({
-  nome: { type: String, required: true },
-  cognome: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  dataDiNascita: { type: String },
-  avatar: { type: String },
-  password: { type: String },
-  googleId: { type: String }, 
-}, {
-  timestamps: true,
-  collection: "authors"
-});
+// Definizione dello schema per l'autore
+const authorSchema = new mongoose.Schema(
+  {
+    nome: { type: String, required: true }, // Campo nome, obbligatorio
+    cognome: { type: String, required: true }, // Campo cognome, obbligatorio
+    email: { type: String, required: true, unique: true }, // Campo email, obbligatorio e unico
+    dataDiNascita: { type: String }, // Campo data di nascita
+    avatar: { type: String }, // Campo avatar (URL)
+    password: { type: String }, // Campo password
+    googleId: { type: String }, // Campo ID di Google (per login con Google)
+  },
+  {
+    timestamps: true, // Aggiunge createdAt e updatedAt
+    collection: "authors", // Nome della collezione nel database
+  }
+);
 
 // Metodo per confrontare le password
 authorSchema.methods.comparePassword = function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-// NEW! Middleware per l'hashing delle password prima del salvataggio
+// Middleware per l'hashing delle password prima del salvataggio
 authorSchema.pre("save", async function (next) {
   // Esegui l'hashing solo se la password è stata modificata (o è nuova)
   if (!this.isModified("password")) return next();
