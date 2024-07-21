@@ -109,8 +109,8 @@ export default function CreatePost() {
       <h1 className="text-3xl text-center py-6 italic text-red-600 font-semibold animate-pulse">
         New Post
       </h1>
-      <form onSubmit={handleSubmit} className="px-8 pb-8 space-y-4">
-        <div className="flex space-x-4">
+      <form onSubmit={handleSubmit} className="px-4 sm:px-8 pb-8 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:space-x-4">
           {/* Campo per il titolo del post */}
           <div className="flex-1">
             <label
@@ -131,7 +131,7 @@ export default function CreatePost() {
           </div>
 
           {/* Campo per la categoria del post (menu a tendina) */}
-          <div className="w-1/3">
+          <div className="w-full sm:w-1/3 mt-4 sm:mt-0">
             <label
               className="block text-[#DFD0B8] text-sm font-bold mb-2"
               htmlFor="category"
@@ -174,7 +174,7 @@ export default function CreatePost() {
           />
         </div>
 
-        {/* Campo per l'upload dell'immagine di copertina */}
+        {/* Campo per l'upload dell'immagine di copertura */}
         <div>
           <label
             className="block text-[#DFD0B8] text-sm font-bold mb-2"
@@ -219,7 +219,7 @@ export default function CreatePost() {
             Read time (minutes)
           </label>
           <input
-            className="w-32 p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8]"
+            className="w-full sm:w-32 p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8]"
             type="number"
             id="readTimeValue"
             name="readTimeValue"
