@@ -52,6 +52,7 @@ export default function PostDetail({ posts, setPosts }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editedPost, setEditedPost] = useState({ title: "", content: "" });
+  const [isAuthor, setIsAuthor] = useState(false);
 
   // Ottieni l'ID del post dai parametri dell'URL
   const { id } = useParams();
@@ -64,6 +65,10 @@ export default function PostDetail({ posts, setPosts }) {
         const postData = await getPost(id);
         setPost(postData);
         setEditedPost(postData);
+        if (userData) {
+          // Verifica se l'email dell'autore del post corrisponde all'email dell'utente loggato
+          setIsAuthor(postData.authorEmail === userData.email);
+        }
       } catch (error) {
         console.error("Errore nel caricamento del post:", error);
       }
@@ -219,7 +224,6 @@ export default function PostDetail({ posts, setPosts }) {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <article className="bg-white shadow-lg rounded-lg overflow-hidden">
-        {/* Immagine di copertura del post */}
         <img
           src={post.cover}
           alt={post.title}
@@ -227,10 +231,8 @@ export default function PostDetail({ posts, setPosts }) {
         />
   
         <div className="p-6">
-          {/* Titolo del post */}
           <h1 className="text-3xl font-bold mb-4 sm:text-2xl">{post.title}</h1>
   
-          {/* Dati del post */}
           <div className="flex flex-wrap text-sm text-gray-600 mb-4">
             <span className="mr-4">Categoria: {post.category}</span>
             <span className="mr-4">Autore: {post.author}</span>
@@ -239,13 +241,11 @@ export default function PostDetail({ posts, setPosts }) {
             </span>
           </div>
   
-          {/* Contenuto del post */}
           <div
             className="prose max-w-none mb-8"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
   
-          {/* Sezione commenti */}
           <div className="mt-8">
             {comments.length > 0 ? (
               comments.map((comment) => (
@@ -273,27 +273,33 @@ export default function PostDetail({ posts, setPosts }) {
               <p className="text-gray-600">Ancora nessun commento</p>
             )}
             <div className="flex justify-between mt-3">
-              {/* Pulsante per aprire la modale dei commenti */}
+              {isAuthor && (
+                <>
+                  <button
+                    onClick={handleEditClick}
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold p-2 rounded-full"
+                  >
+                    <PencilIcon className="w-8" />
+                  </button>
+                  <button
+                    onClick={handleDeletePost}
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold p-2 rounded-full"
+                  >
+                    <TrashIcon className="w-8" />
+                  </button>
+                </>
+              )}
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full flex"
               >
                 <ChatBubbleOvalLeftEllipsisIcon className="w-8" />
               </button>
-  
-              {/* Pulsante per modificare il post */}
-              <button
-                onClick={handleEditClick}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold p-2 rounded-full"
-              >
-                <PencilIcon className="w-8" />
-              </button>
             </div>
           </div>
         </div>
       </article>
   
-      {/* Modal per aggiungere un commento */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
           <div className="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
@@ -329,7 +335,6 @@ export default function PostDetail({ posts, setPosts }) {
         </div>
       )}
   
-      {/* Modal per modificare il post */}
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
           <div className="relative p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
@@ -361,13 +366,6 @@ export default function PostDetail({ posts, setPosts }) {
                   className="bg-gray-500 text-white px-4 py-2 rounded"
                 >
                   Annulla
-                </button>
-                <button
-                  type="button"
-                  onClick={handleDeletePost}
-                  className="bg-red-500 text-white px-4 py-2 rounded"
-                >
-                  Elimina Post
                 </button>
               </div>
             </form>
