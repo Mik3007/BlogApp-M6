@@ -115,23 +115,19 @@ export default function CreatePost() {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="container max-w-4xl mx-auto my-8 text-[#000000] rounded-lg shadow-xl overflow-hidden bg-transparent"
+      className="container max-w-4xl mx-auto my-8 text-[#000000] rounded-lg shadow-xl overflow-hidden bg-[#153448] p-6"
     >
-      <h1 className="text-3xl text-center py-6 italic text-red-600 font-semibold animate-pulse">
+      <h1 className="text-3xl text-center py-6 italic text-[#DFD0B8] font-semibold animate-pulse">
         New Post
       </h1>
-      <form onSubmit={handleSubmit} className="px-4 sm:px-8 pb-8 space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:space-x-4">
-          {/* Campo per il titolo del post */}
           <div className="flex-1">
-            <label
-              className="block text-[#DFD0B8] text-sm font-bold mb-2"
-              htmlFor="title"
-            >
+            <label className="block text-[#DFD0B8] text-sm font-bold mb-2" htmlFor="title">
               Title
             </label>
             <input
-              className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8]"
+              className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8] bg-white text-black"
               type="text"
               id="title"
               name="title"
@@ -141,16 +137,12 @@ export default function CreatePost() {
             />
           </div>
 
-          {/* Campo per la categoria del post (menu a tendina) */}
           <div className="w-full sm:w-1/3 mt-4 sm:mt-0">
-            <label
-              className="block text-[#DFD0B8] text-sm font-bold mb-2"
-              htmlFor="category"
-            >
+            <label className="block text-[#DFD0B8] text-sm font-bold mb-2" htmlFor="category">
               Category
             </label>
             <select
-              className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8] bg-white"
+              className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8] bg-white text-black"
               id="category"
               name="category"
               value={post.category}
@@ -167,34 +159,12 @@ export default function CreatePost() {
           </div>
         </div>
 
-        {/* Campo per l'email dell'autore */}
         <div>
-          <label
-            className="block text-[#DFD0B8] text-sm font-bold mb-2"
-            htmlFor="author"
-          >
-            Author email
-          </label>
-          <input
-            className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8]"
-            type="email"
-            id="author"
-            name="author"
-            value={post.author}
-            onChange={handleChange}
-          />
-        </div>
-
-        {/* Campo per l'upload dell'immagine di copertura */}
-        <div>
-          <label
-            className="block text-[#DFD0B8] text-sm font-bold mb-2"
-            htmlFor="cover"
-          >
+          <label className="block text-[#DFD0B8] text-sm font-bold mb-2" htmlFor="cover">
             Cover Image
           </label>
           <input
-            className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8]"
+            className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8] bg-white text-black"
             type="file"
             id="cover"
             name="cover"
@@ -203,16 +173,12 @@ export default function CreatePost() {
           />
         </div>
 
-        {/* Campo per il contenuto del post */}
         <div>
-          <label
-            className="block text-[#DFD0B8] text-sm font-bold mb-2"
-            htmlFor="content"
-          >
+          <label className="block text-[#DFD0B8] text-sm font-bold mb-2" htmlFor="content">
             Content
           </label>
           <textarea
-            className="w-full p-2 border border-gray-400 rounded h-32 focus:outline-none focus:border-[#DFD0B8]"
+            className="w-full p-2 border border-gray-400 rounded h-32 focus:outline-none focus:border-[#DFD0B8] bg-white text-black"
             id="content"
             name="content"
             value={post.content}
@@ -221,16 +187,12 @@ export default function CreatePost() {
           />
         </div>
 
-        {/* Campo per il tempo di lettura del post */}
         <div>
-          <label
-            className="block text-[#DFD0B8] text-sm font-bold mb-2"
-            htmlFor="readTimeValue"
-          >
+          <label className="block text-[#DFD0B8] text-sm font-bold mb-2" htmlFor="readTimeValue">
             Read time (minutes)
           </label>
           <input
-            className="w-full sm:w-32 p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8]"
+            className="w-full sm:w-32 p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8] bg-white text-black"
             type="number"
             id="readTimeValue"
             name="readTimeValue"
@@ -240,14 +202,18 @@ export default function CreatePost() {
           />
         </div>
 
-        {/* Pulsante per inviare il form */}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           type="submit"
-          className="w-full bg-[#DFD0B8] text-[#153448] font-bold py-2 px-4 rounded focus:outline-none hover:bg-[#C0A58E] transition duration-300"
+          disabled={isLoading}
+          className={`w-full font-bold py-2 px-4 rounded focus:outline-none transition duration-300 ${
+            isLoading
+              ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+              : "bg-[#DFD0B8] text-[#153448] hover:bg-[#C0A58E]"
+          }`}
         >
-          Create Post
+          {isLoading ? "Creating Post..." : "Create Post"}
         </motion.button>
       </form>
     </motion.div>
