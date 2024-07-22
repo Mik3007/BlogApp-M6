@@ -46,17 +46,23 @@ router.use(authMiddleware);
 
 // POST /blogPosts: crea un nuovo blog post con l'upload dell'immagine di copertura
 router.post("/", cloudinaryUploader.single("cover"), async (req, res) => {
+  console.log("Ricevuta richiesta POST per creare un nuovo post");
+  console.log("Corpo della richiesta:", req.body);
+  console.log("File caricato:", req.file);
   try {
     const postData = req.body;
     if (req.file) {
       postData.cover = req.file.path; // Cloudinary restituirà direttamente l'URL dell'immagine
     }
+    console.log("Dati del post da salvare:", postData);
     // Verifica che tutti i campi obbligatori siano presenti
     if (!postData.title || !postData.category || !postData.content || !postData.readTime || !postData.author) {
       return res.status(400).json({ message: "Tutti i campi sono obbligatori" });
     }
     const newPost = new BlogPost(postData);
     await newPost.save();
+
+    console.log("Nuovo post creato con successo:", newPost);
 
     // Invia una mail all'autore del post
     const htmlContent = `
