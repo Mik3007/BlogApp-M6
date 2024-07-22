@@ -56,22 +56,14 @@ router.post("/", cloudinaryUploader.single("cover"), async (req, res) => {
     }
     console.log("Dati del post da salvare:", postData);
     // Verifica che tutti i campi obbligatori siano presenti
+    // Validazione dei campi
     if (!postData.title || !postData.category || !postData.content || !postData.readTime) {
-      console.log("Dati mancanti:", { 
-        title: postData.title, 
-        category: postData.category, 
-        content: postData.content, 
-        readTime: postData.readTime
-      });
-      return res.status(400).json({ 
-        message: "Tutti i campi sono obbligatori", 
-        missingFields: { 
-          title: !postData.title, 
-          category: !postData.category, 
-          content: !postData.content, 
-          readTime: !postData.readTime
-        } 
-      });
+      return res.status(400).json({ message: "Campi obbligatori mancanti" });
+    }
+    
+    // Gestione del campo author
+    if (!postData.author || postData.author === 'undefined') {
+      postData.author = 'Autore anonimo';  // O qualsiasi altro valore di default
     }
     const newPost = new BlogPost(postData);
     await newPost.save();
@@ -79,22 +71,23 @@ router.post("/", cloudinaryUploader.single("cover"), async (req, res) => {
     console.log("Nuovo post creato con successo:", newPost);
 
     // Invia una mail all'autore del post
-    const htmlContent = `
-      <h1>Il tuo post è stato pubblicato!</h1>
-      <p>Ciao ${newPost.author},</p>
-      <p>Il tuo post "${newPost.title}" è stato pubblicato con successo.</p>
-      <p>Categoria: ${newPost.category}</p>
-      <p>Grazie per il tuo contributo al blog!</p>
-    `;
+    // const htmlContent = `
+    //   <h1>Il tuo post è stato pubblicato!</h1>
+    //   <p>Ciao ${newPost.author},</p>
+    //   <p>Il tuo post "${newPost.title}" è stato pubblicato con successo.</p>
+    //   <p>Categoria: ${newPost.category}</p>
+    //   <p>Grazie per il tuo contributo al blog!</p>
+    // `;
 
-    await sendEmail(
-      newPost.author, // Ovviamente assumendo che newPost.author sia l'email dell'autore
-      "Il tuo post è stato correttamente pubblicato",
-      htmlContent
-    );
+    // await sendEmail(
+    //   newPost.author, // Ovviamente assumendo che newPost.author sia l'email dell'autore
+    //   "Il tuo post è stato correttamente pubblicato",
+    //   // htmlContent 
+    // );
 
     res.status(201).json(newPost);
   } catch (error) {
+    console.error("Errore durante la creazione del post:", error);
     // Gestisce eventuali errori durante la creazione del post
     res.status(400).json({ message: error.message });
   }

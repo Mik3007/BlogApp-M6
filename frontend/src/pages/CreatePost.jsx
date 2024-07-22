@@ -40,8 +40,7 @@ export default function CreatePost() {
         setPost((prevPost) => ({ ...prevPost, author: userData.email }));
       } catch (error) {
         console.error("Errore nel recupero dei dati utente:", error);
-        // Reindirizza alla home se c'è un errore
-        navigate("/");
+        setPost(prevPost => ({ ...prevPost, author: 'Email non disponibile' }));
       }
     };
     fetchUserEmail();
