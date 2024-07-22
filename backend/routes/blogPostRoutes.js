@@ -1,7 +1,7 @@
 import express from "express";
 import BlogPost from "../models/BlogPost.js";
 import cloudinaryUploader from "../config/claudinaryConfig.js"; // Import dell'uploader di Cloudinary
-import { sendEmail } from "../services/emailService.js"; // Import del servizio per l'invio delle mail
+//import { sendEmail } from "../services/emailService.js"; // Import del servizio per l'invio delle mail
 import { authMiddleware } from "../middlewares/authMiddleware.js"; // Middleware di autenticazione
 
 const router = express.Router();

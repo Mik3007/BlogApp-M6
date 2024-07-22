@@ -40,7 +40,7 @@ function AvatarProfilo({ userData }) {
   );
 }
 
-export default function PostDetail() {
+export default function PostDetail({ posts, setPosts}) {
   // Stati per memorizzare i dati del post, dei commenti e dell'utente
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
@@ -138,8 +138,8 @@ export default function PostDetail() {
     if (!post) return;
     try {
       await deletePost(post._id);
-      console.log(`Post eliminato con successo: ${post._id}`);
-      setPost(prevPosts => prevPosts.filter(post => post._id !== postId));
+      alert(`Post eliminato con successo: ${post._id}`);
+      setPosts(prevPosts => prevPosts.filter(currentPost => currentPost._id !== post._id));
       navigate("/home");
     } catch (error) {
       console.error(

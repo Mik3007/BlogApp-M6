@@ -74,6 +74,7 @@ function PostCard({ post }) {
 }
 
 export default function Home({ posts, setPosts }) {
+  const location = useLocation();
   // Effetto per recuperare i post quando il componente viene montato
   useEffect(() => {
     const fetchPosts = async () => {
@@ -88,7 +89,7 @@ export default function Home({ posts, setPosts }) {
       }
     };
     fetchPosts();
-  }, []);
+  }, [location, setPosts]);
 
   // Rendering del componente
   return (
