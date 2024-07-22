@@ -29,12 +29,19 @@ export const getPosts = () => api.get("/blogPosts");
 // NEW: modifico per praticità la funzione getPost:id
 export const getPost = (id) =>
   api.get(`/blogPosts/${id}`).then((response) => response.data);
-export const createPost = (postData) =>
-  api.post("/blogPosts", postData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+export const createPost = async (postData) => {
+  try {
+    const response = await api.post("/blogPosts", postData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Errore dettagliato nella chiamata API createPost:", error.response?.data || error);
+    throw error;
+  }
+};
 export const updatePost = (id, postData) =>
   api.put(`/blogPosts/${id}`, postData);
 export const deletePost = (id) => api.delete(`/blogPosts/${id}`);

@@ -57,7 +57,8 @@ router.post("/", cloudinaryUploader.single("cover"), async (req, res) => {
     console.log("Dati del post da salvare:", postData);
     // Verifica che tutti i campi obbligatori siano presenti
     if (!postData.title || !postData.category || !postData.content || !postData.readTime || !postData.author) {
-      return res.status(400).json({ message: "Tutti i campi sono obbligatori" });
+      console.log("Dati mancanti:", { title: !!postData.title, category: !!postData.category, content: !!postData.content, readTime: !!postData.readTime, author: !!postData.author });
+      return res.status(400).json({ message: "Tutti i campi sono obbligatori", missingFields: { title: !postData.title, category: !postData.category, content: !postData.content, readTime: !postData.readTime, author: !postData.author } });
     }
     const newPost = new BlogPost(postData);
     await newPost.save();

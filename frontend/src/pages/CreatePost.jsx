@@ -108,6 +108,7 @@ export default function CreatePost() {
       navigate("/home");
     } catch (error) {
       console.error("Errore nella creazione del post:", error);
+      alert("Errore nella creazione del post. Controlla la console per i dettagli.");
     } finally {
       setIsLoading(false);
     }
