@@ -95,32 +95,32 @@ export default function Home({ posts, setPosts }) {
   return (
     <div className="font-serif min-h-screen">
       <motion.div
-        className="bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 bg-[linear-gradient(to_bottom,#153448,#DFD0B8)] dark:bg-gradient-to-r from-black to-gray-600"
+        className="bg-gradient-to-b from-[#153448] to-[#DFD0B8] dark:bg-gradient-to-r dark:from-black dark:to-gray-600 py-8 sm:py-12 px-4 sm:px-6 lg:px-8"
         variants={heroVariants}
         initial="hidden"
         animate="visible"
       >
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl font-bold italic mb-6 dark:text-white">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold italic mb-4 sm:mb-6 text-white dark:text-white">
             Blog App
           </h1>
-          <h3 className="text-2xl mb-8 dark:text-white">
+          <h3 className="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 text-white dark:text-white">
             "Connect, share, inspire. Add your post to our collection of ideas."
           </h3>
           <Link
             to="/create"
-            className="inline-block border-2 p-4 rounded-full bg-[#153448] text-white transition duration-300 dark:bg-green-600 dark:hover:bg-[#33FF33] dark:text-black"
+            className="inline-block border-2 py-2 px-4 sm:py-3 sm:px-6 rounded-full bg-[#153448] text-white transition duration-300 hover:bg-[#0f2430] dark:bg-green-600 dark:hover:bg-[#33FF33] dark:text-black text-sm sm:text-base"
           >
             Add Post
           </Link>
         </div>
       </motion.div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
           {posts.map((post) => (
             <div key={post._id} className="flex justify-center">
-              <div className="w-full max-w-2xl">
+              <div className="w-full">
                 <PostCard post={post} />
               </div>
             </div>
