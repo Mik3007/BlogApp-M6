@@ -229,23 +229,24 @@ export default function PostDetail({ posts, setPosts }) {
           alt={post.title}
           className="w-full h-64 object-cover sm:h-48"
         />
-  
+
         <div className="p-6">
           <h1 className="text-3xl font-bold mb-4 sm:text-2xl">{post.title}</h1>
-  
+
           <div className="flex flex-wrap text-sm text-gray-600 mb-4">
             <span className="mr-4">Categoria: {post.category}</span>
             <span className="mr-4">Autore: {post.author}</span>
             <span>
-              Tempo di lettura: {post.readTime?.value ?? ""} {post.readTime?.unit ?? ""}
+              Tempo di lettura: {post.readTime?.value ?? ""}{" "}
+              {post.readTime?.unit ?? ""}
             </span>
           </div>
-  
+
           <div
             className="prose max-w-none mb-8"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
-  
+
           <div className="mt-8">
             {comments.length > 0 ? (
               comments.map((comment) => (
@@ -299,7 +300,7 @@ export default function PostDetail({ posts, setPosts }) {
           </div>
         </div>
       </article>
-  
+
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
           <div className="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
@@ -334,11 +335,13 @@ export default function PostDetail({ posts, setPosts }) {
           </div>
         </div>
       )}
-  
+
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
           <div className="relative p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Modifica Post</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">
+              Modifica Post
+            </h3>
             <form onSubmit={handleEditSubmit}>
               <input
                 type="text"
@@ -373,5 +376,5 @@ export default function PostDetail({ posts, setPosts }) {
         </div>
       )}
     </div>
-  );  
+  );
 }

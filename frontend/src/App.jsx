@@ -16,7 +16,6 @@ import Error from "./pages/Error";
 
 // Definisce il componente principale App
 function App() {
-
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
 
@@ -39,7 +38,10 @@ function App() {
             <Route path="/login" element={<Login />} />
 
             {/* Route per la home page */}
-            <Route path="/home" element={<Home posts={filteredPosts} setPosts={setPosts} />}/>
+            <Route
+              path="/home"
+              element={<Home posts={filteredPosts} setPosts={setPosts} />}
+            />
 
             {/* Route per la pagina di creazione di un nuovo post */}
             <Route path="/create" element={<CreatePost />} />
@@ -48,12 +50,11 @@ function App() {
                 :id è un parametro dinamico che rappresenta l'ID del post */}
             <Route path="/post/:id" element={<PostDetail />} />
 
-            <Route path='*' element={<Error />} />
+            <Route path="*" element={<Error />} />
           </Routes>
- 
         </main>
       </div>
-      <MyFooter/>
+      <MyFooter />
     </Router>
   );
 }
