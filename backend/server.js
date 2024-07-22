@@ -51,8 +51,9 @@ const corsOptions = {
       callback(new Error('PERMESSO NEGATO - CORS'));
     }
   },
-  credentials: true // Permette l'invio di credenziali, come nel caso di autenticazione
-  // basata su sessioni.
+  credentials: true, // Permette l'invio di credenziali, come nel caso di autenticazione basata su sessioni.
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 // passiamo `corsOptions` a cors()
@@ -60,6 +61,7 @@ app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
   console.log(`Received request: ${req.method} ${req.url}`);
+  console.log('Headers:', req.headers);
   next();
 }); // da togliere
 
