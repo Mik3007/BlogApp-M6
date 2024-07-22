@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Definiamo l'url di base
-const API_URL = "https://nome_della_tua_app.onrender.com/api"
+const API_URL = "https://blogapp-m6-rjaf.onrender.com/api"
 
 // Configura un'istanza di axios con l'URL di base
 const api = axios.create({

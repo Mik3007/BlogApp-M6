@@ -55,7 +55,7 @@ const corsOptions = {
   // basata su sessioni.
 };
 
-// NEW! passiamo `corsOptions` a cors()
+// passiamo `corsOptions` a cors()
 app.use(cors(corsOptions));
 
 app.use((req, res, next) => {

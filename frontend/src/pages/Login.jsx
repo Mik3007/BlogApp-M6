@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { loginUser, getPosts } from "../services/api";
 import { motion } from "framer-motion"; // Importa motion per animazioni
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
 export default function Login() {
   // Stato per memorizzare i dati login
