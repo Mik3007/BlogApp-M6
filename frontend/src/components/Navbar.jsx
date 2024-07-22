@@ -108,7 +108,11 @@ export default function Navbar({ setPosts, setFilteredPosts }) {
         <div className="flex flex-wrap items-center justify-between">
           {/* Logo e Home link */}
           <Link to="/home" className="flex items-center text-2xl sm:text-4xl">
-            <img src="/pngwing.com(1).png" alt="" className="h-12 sm:h-16 w-auto" />
+            <img
+              src="/pngwing.com(1).png"
+              alt=""
+              className="h-12 sm:h-16 w-auto"
+            />
             <span className="flex items-center ml-2">
               <HomeIcon className="text-[#DFD0B8] w-6 sm:w-8 dark:text-[#33FF33]" />
               <span className="hidden sm:inline ml-2">Home</span>
@@ -116,12 +120,19 @@ export default function Navbar({ setPosts, setFilteredPosts }) {
           </Link>
 
           {/* Hamburger menu per mobile */}
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="sm:hidden">
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="sm:hidden"
+          >
             <Bars3Icon className="h-6 w-6 text-[#DFD0B8]" />
           </button>
 
           {/* Menu items */}
-          <div className={`${isMenuOpen ? 'block' : 'hidden'} sm:flex flex-col sm:flex-row items-center w-full sm:w-auto mt-4 sm:mt-0 space-y-4 sm:space-y-0 sm:space-x-4`}>
+          <div
+            className={`${
+              isMenuOpen ? "block" : "hidden"
+            } sm:flex flex-col sm:flex-row items-center w-full sm:w-auto mt-4 sm:mt-0 space-y-4 sm:space-y-0 sm:space-x-4`}
+          >
             {/* Campo di ricerca */}
             <motion.input
               type="text"
@@ -132,9 +143,13 @@ export default function Navbar({ setPosts, setFilteredPosts }) {
             />
 
             {isLoggedIn ? (
-              <>
-                <div className="flex items-center space-x-4">
-                  {user ? <Avatar user={user} /> : <UserIcon className="w-8 h-8 text-[#DFD0B8]" />}
+              <div className="flex flex-col sm:flex-row items-center sm:space-x-4">
+                <div className="flex items-center space-x-4 mb-4 sm:mb-0">
+                  {user ? (
+                    <Avatar user={user} />
+                  ) : (
+                    <UserIcon className="w-8 h-8 text-[#DFD0B8]" />
+                  )}
                   <button
                     onClick={handleLogout}
                     className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded dark:bg-[#33FF33]"
@@ -142,7 +157,8 @@ export default function Navbar({ setPosts, setFilteredPosts }) {
                     Logout
                   </button>
                 </div>
-              </>
+                <DarkThemeToggle className="rounded-full" />
+              </div>
             ) : (
               <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                 <Link
@@ -159,8 +175,6 @@ export default function Navbar({ setPosts, setFilteredPosts }) {
                 </Link>
               </div>
             )}
-
-            <DarkThemeToggle className="rounded-full" />
           </div>
         </div>
       </div>
