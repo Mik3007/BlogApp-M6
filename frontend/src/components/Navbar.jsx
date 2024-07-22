@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { HomeIcon, UserIcon } from "@heroicons/react/24/solid";
+import { HomeIcon, UserIcon, Bars3Icon } from "@heroicons/react/24/solid";
 import { getPosts, getUserData } from "../services/api";
 import { motion } from "framer-motion";
 import { DarkThemeToggle } from "flowbite-react";
@@ -30,6 +30,7 @@ export default function Navbar({ setPosts, setFilteredPosts }) {
   const navigate = useNavigate();
   const [search, setSearch] = useState(""); // Stato per il termine di ricerca
   const [allPosts, setAllPosts] = useState([]); // Stato per memorizzare tutti i post recuperati
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Effetto per controllare lo stato di login e recuperare i dati dell'utente
   useEffect(() => {
@@ -103,76 +104,64 @@ export default function Navbar({ setPosts, setFilteredPosts }) {
 
   return (
     <nav className="bg-[#153448] text-[#DFD0B8] sticky top-0 z-50 dark:bg-gradient-to-r from-black to-gray-600">
-      <div className="container mx-auto px-4 h-28 flex items-center justify-between">
-        {/* Link per tornare alla home page */}
-        <Link to="/home" className="flex items-center text-4xl">
-          <img src="/pngwing.com(1).png" alt="" className="h-16 w-auto" />
-          <span className="flex items-center">
-            <HomeIcon className="text-[#DFD0B8] w-8 mx-2 dark:text-[#33FF33]" />{" "}
-            Home
-          </span>
-        </Link>
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex flex-wrap items-center justify-between">
+          {/* Logo e Home link */}
+          <Link to="/home" className="flex items-center text-2xl sm:text-4xl">
+            <img src="/pngwing.com(1).png" alt="" className="h-12 sm:h-16 w-auto" />
+            <span className="flex items-center ml-2">
+              <HomeIcon className="text-[#DFD0B8] w-6 sm:w-8 dark:text-[#33FF33]" />
+              <span className="hidden sm:inline ml-2">Home</span>
+            </span>
+          </Link>
 
-        <div className="flex items-center space-x-4">
-          {isLoggedIn ? (
-            <>
-              {/* Campo di ricerca animato */}
-              <motion.input
-                type="text"
-                placeholder="Search..."
-                value={search}
-                onChange={handleSearch}
-                initial={{ background: "#fff" }}
-                whileFocus={{
-                  background: [
-                    "linear-gradient(to right, #A38D68 0%, #DFD0B8 50%, #F0E5D3 100%)",
-                    "linear-gradient(to right, #DFD0B8 0%, #F0E5D3 50%, #A38D68 100%)",
-                    "linear-gradient(to right, #F0E5D3 0%, #A38D68 50%, #DFD0B8 100%)",
-                  ],
-                }}
-                animate={{ background: "#fff" }} // Colore di sfondo animato
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-                className="w-64 md:w-80 h-10 rounded-md text-[#153448] focus:outline-none px-4 py-2 dark-search"
-              />
-              <div className="flex items-center space-x-4">
-                {/* Mostra l'avatar dell'utente o un'icona se non è presente */}
-                {user ? (
-                  <Avatar user={user} />
-                ) : (
-                  <UserIcon className="w-8 h-8 text-[#DFD0B8]" />
-                )}
-                {/* Pulsante per il logout */}
-                <button
-                  onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded dark:bg-[#33FF33]"
+          {/* Hamburger menu per mobile */}
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="sm:hidden">
+            <Bars3Icon className="h-6 w-6 text-[#DFD0B8]" />
+          </button>
+
+          {/* Menu items */}
+          <div className={`${isMenuOpen ? 'block' : 'hidden'} sm:flex flex-col sm:flex-row items-center w-full sm:w-auto mt-4 sm:mt-0 space-y-4 sm:space-y-0 sm:space-x-4`}>
+            {/* Campo di ricerca */}
+            <motion.input
+              type="text"
+              placeholder="Search..."
+              value={search}
+              onChange={handleSearch}
+              className="w-full sm:w-64 md:w-80 h-10 rounded-md text-[#153448] focus:outline-none px-4 py-2 dark-search"
+            />
+
+            {isLoggedIn ? (
+              <>
+                <div className="flex items-center space-x-4">
+                  {user ? <Avatar user={user} /> : <UserIcon className="w-8 h-8 text-[#DFD0B8]" />}
+                  <button
+                    onClick={handleLogout}
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded dark:bg-[#33FF33]"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                <Link
+                  to="/"
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded text-center"
                 >
-                  Logout
-                </button>
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded text-center"
+                >
+                  Registrati
+                </Link>
               </div>
-              {/* Pulsante per attivare/disattivare il tema scuro */}
-              <DarkThemeToggle className="rounded-full" />
-            </>
-          ) : (
-            <div className="flex space-x-4">
-              {/* Link per la pagina di login e registrazione */}
-              <Link
-                to="/"
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-              >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-              >
-                Registrati
-              </Link>
-            </div>
-          )}
+            )}
+
+            <DarkThemeToggle className="rounded-full" />
+          </div>
         </div>
       </div>
     </nav>
