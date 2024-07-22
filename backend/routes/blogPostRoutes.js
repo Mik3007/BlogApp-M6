@@ -46,15 +46,11 @@ router.use(authMiddleware);
 
 // POST /blogPosts: crea un nuovo blog post con l'upload dell'immagine di copertura
 router.post("/", cloudinaryUploader.single("cover"), async (req, res) => {
-  console.log("Ricevuta richiesta POST per creare un nuovo post");
-  console.log("Corpo della richiesta:", req.body);
-  console.log("File caricato:", req.file);
   try {
     const postData = req.body;
     if (req.file) {
       postData.cover = req.file.path; // Cloudinary restituirà direttamente l'URL dell'immagine
     }
-    console.log("Dati del post da salvare:", postData);
     // Verifica che tutti i campi obbligatori siano presenti
     // Validazione dei campi
     if (!postData.title || !postData.category || !postData.content || !postData.readTime) {
@@ -71,19 +67,19 @@ router.post("/", cloudinaryUploader.single("cover"), async (req, res) => {
     console.log("Nuovo post creato con successo:", newPost);
 
     // Invia una mail all'autore del post
-    // const htmlContent = `
-    //   <h1>Il tuo post è stato pubblicato!</h1>
-    //   <p>Ciao ${newPost.author},</p>
-    //   <p>Il tuo post "${newPost.title}" è stato pubblicato con successo.</p>
-    //   <p>Categoria: ${newPost.category}</p>
-    //   <p>Grazie per il tuo contributo al blog!</p>
-    // `;
+    const htmlContent = `
+      <h1>Il tuo post è stato pubblicato!</h1>
+      <p>Ciao ${newPost.author},</p>
+      <p>Il tuo post "${newPost.title}" è stato pubblicato con successo.</p>
+      <p>Categoria: ${newPost.category}</p>
+      <p>Grazie per il tuo contributo al blog!</p>
+    `;
 
-    // await sendEmail(
-    //   newPost.author, // Ovviamente assumendo che newPost.author sia l'email dell'autore
-    //   "Il tuo post è stato correttamente pubblicato",
-    //   // htmlContent 
-    // );
+    await sendEmail(
+      newPost.author, // Ovviamente assumendo che newPost.author sia l'email dell'autore
+      "Il tuo post è stato correttamente pubblicato",
+       htmlContent 
+    );
 
     res.status(201).json(newPost);
   } catch (error) {

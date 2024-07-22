@@ -71,7 +71,6 @@ export default function CreatePost() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      console.log("Dati del post da inviare:", post);
       // Creazione di un oggetto FormData per inviare i dati del post e il file
       const formData = new FormData();
 
@@ -92,7 +91,6 @@ export default function CreatePost() {
 
       // Invia i dati del post al backend
       const response = await createPost(formData);
-      console.log("Risposta del server:", response);
 
       setPost({
         title: "",
