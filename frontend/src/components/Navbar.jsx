@@ -108,11 +108,6 @@ export default function Navbar({ setPosts, setFilteredPosts }) {
         <div className="flex flex-wrap items-center justify-between">
           {/* Logo e Home link */}
           <Link to="/home" className="flex items-center text-2xl sm:text-4xl">
-            <img
-              src="/pngwing.com(1).png"
-              alt=""
-              className="h-12 sm:h-16 w-auto"
-            />
             <span className="flex items-center ml-2">
               <HomeIcon className="text-[#DFD0B8] w-6 sm:w-8 dark:text-[#33FF33]" />
               <span className="hidden sm:inline ml-2">Home</span>
