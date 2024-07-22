@@ -33,40 +33,35 @@ const app = express();
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Definiamo una whitelist di origini consentite. 
-    // Queste sono gli URL da cui il nostro frontend farà richieste al backend.
     const whitelist = [
-      'http://localhost:5173', // Frontend in sviluppo
-      'https://blogapp-omega-vert.vercel.app/', // Frontend in produzione (prendere da vercel!)
-      'https://blogapp-m6-rjaf.onrender.com' // URL del backend (prendere da render!)
+      'http://localhost:5173',
+      'https://blogapp-omega-vert.vercel.app',
+      'https://blogapp-m6-rjaf.onrender.com'
     ];
     
-    if (process.env.NODE_ENV === 'development') {
-      // In sviluppo, permettiamo anche richieste senza origine (es. Postman)
-      callback(null, true);
-    } else if (whitelist.indexOf(origin) !== -1 || !origin) {
-      // In produzione, controlliamo se l'origine è nella whitelist
+    if (!origin || whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('PERMESSO NEGATO - CORS'));
+      console.log('Origin not allowed by CORS:', origin);
+      callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true, // Permette l'invio di credenziali, come nel caso di autenticazione basata su sessioni.
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 // passiamo `corsOptions` a cors()
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use((req, res, next) => {
   console.log(`Received request: ${req.method} ${req.url}`);
   console.log('Headers:', req.headers);
+  console.log('Headers:', req.headers);
   next();
 }); // da togliere
-
 // Applicazione dei middleware globali
-app.use(cors()); // Abilita CORS per tutte le rotte
 app.use(express.json()); // Parsing del corpo delle richieste in formato JSON
 
 app.use(
