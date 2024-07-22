@@ -28,7 +28,7 @@ function App() {
         <Navbar setPosts={setPosts} setFilteredPosts={setFilteredPosts} />
 
         {/* Il tag main contiene il contenuto principale che cambia in base al routing */}
-        <main className="flex-grow">
+        <main className="flex-grow mb-24">
           {/* Routes definisce le diverse rotte dell'applicazione */}
           <Routes>
             {/* rotta per la registrazione dell'utente */}
