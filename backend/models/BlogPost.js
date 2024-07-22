@@ -23,7 +23,7 @@ const blogPostSchema = new mongoose.Schema(
       value: { type: Number, required: true },
       unit: { type: String, required: true },
     },
-    author: { type: String, required: true },
+    author: { type: String, },
     content: { type: String, required: true },
     comments: [commentSchema], // Array di commenti, incorporato
   },

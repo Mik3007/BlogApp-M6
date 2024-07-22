@@ -53,33 +53,39 @@ router.post("/", cloudinaryUploader.single("cover"), async (req, res) => {
     }
     // Verifica che tutti i campi obbligatori siano presenti
     // Validazione dei campi
-    if (!postData.title || !postData.category || !postData.content || !postData.readTime) {
+    if (
+      !postData.title ||
+      !postData.category ||
+      !postData.content ||
+      !postData.readTime
+    ) {
       return res.status(400).json({ message: "Campi obbligatori mancanti" });
     }
-    
+
     // Gestione del campo author
-    if (!postData.author || postData.author === 'undefined') {
-      postData.author = 'Autore anonimo';  // O qualsiasi altro valore di default
+    if (!postData.author || postData.author === "undefined") {
+      postData.author = "Autore anonimo"; // O qualsiasi altro valore di default
     }
     const newPost = new BlogPost(postData);
     await newPost.save();
 
     console.log("Nuovo post creato con successo:", newPost);
 
+    // -- COMMENTATO PER NON DARE PROBLEMI ALLA CREAZIONE DEL POST
     // Invia una mail all'autore del post
-    const htmlContent = `
-      <h1>Il tuo post è stato pubblicato!</h1>
-      <p>Ciao ${newPost.author},</p>
-      <p>Il tuo post "${newPost.title}" è stato pubblicato con successo.</p>
-      <p>Categoria: ${newPost.category}</p>
-      <p>Grazie per il tuo contributo al blog!</p>
-    `;
+    //     const htmlContent = `
+    //       <h1>Il tuo post è stato pubblicato!</h1>
+    //       <p>Ciao ${newPost.author},</p>
+    //       <p>Il tuo post "${newPost.title}" è stato pubblicato con successo.</p>
+    //       <p>Categoria: ${newPost.category}</p>
+    //       <p>Grazie per il tuo contributo al blog!</p>
+    //     `;
 
-    await sendEmail(
-      newPost.author, // Ovviamente assumendo che newPost.author sia l'email dell'autore
-      "Il tuo post è stato correttamente pubblicato",
-       htmlContent 
-    );
+    //     await sendEmail(
+    //       newPost.author, // Ovviamente assumendo che newPost.author sia l'email dell'autore
+    //       "Il tuo post è stato correttamente pubblicato",
+    //        htmlContent
+    //     );
 
     res.status(201).json(newPost);
   } catch (error) {
@@ -128,32 +134,36 @@ router.delete("/:id", async (req, res) => {
 });
 
 // PATCH /blogPosts/:blogPostId/cover: carica un'immagine di copertina per il post specificato
-router.patch("/:blogPostId/cover", cloudinaryUploader.single("cover"), async (req, res) => {
-  try {
-    // Verifica se è stato caricato un file
-    if (!req.file) {
-      return res.status(400).json({ message: "Ops, nessun file caricato" });
+router.patch(
+  "/:blogPostId/cover",
+  cloudinaryUploader.single("cover"),
+  async (req, res) => {
+    try {
+      // Verifica se è stato caricato un file
+      if (!req.file) {
+        return res.status(400).json({ message: "Ops, nessun file caricato" });
+      }
+
+      // Cerca il blog post nel database
+      const blogPost = await BlogPost.findById(req.params.blogPostId);
+      if (!blogPost) {
+        return res.status(404).json({ message: "Blog post non trovato" });
+      }
+
+      // Aggiorna l'URL della copertina del post con l'URL fornito da Cloudinary
+      blogPost.cover = req.file.path;
+
+      // Salva le modifiche nel database
+      await blogPost.save();
+
+      // Invia la risposta con il blog post aggiornato
+      res.json(blogPost);
+    } catch (error) {
+      // In caso di errore, invia una risposta di errore
+      res.status(500).json({ message: "Errore interno del server" });
     }
-
-    // Cerca il blog post nel database
-    const blogPost = await BlogPost.findById(req.params.blogPostId);
-    if (!blogPost) {
-      return res.status(404).json({ message: "Blog post non trovato" });
-    }
-
-    // Aggiorna l'URL della copertina del post con l'URL fornito da Cloudinary
-    blogPost.cover = req.file.path;
-
-    // Salva le modifiche nel database
-    await blogPost.save();
-
-    // Invia la risposta con il blog post aggiornato
-    res.json(blogPost);
-  } catch (error) {
-    // In caso di errore, invia una risposta di errore
-    res.status(500).json({ message: "Errore interno del server" });
   }
-});
+);
 
 // GET /blogPosts/:id/comments => ritorna tutti i commenti di uno specifico post
 router.get("/:id/comments", async (req, res) => {
