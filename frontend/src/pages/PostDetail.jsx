@@ -225,38 +225,37 @@ export default function PostDetail({ posts, setPosts }) {
           alt={post.title}
           className="w-full h-64 object-cover sm:h-48"
         />
-
+  
         <div className="p-6">
           {/* Titolo del post */}
           <h1 className="text-3xl font-bold mb-4 sm:text-2xl">{post.title}</h1>
-
+  
           {/* Dati del post */}
           <div className="flex flex-wrap text-sm text-gray-600 mb-4">
             <span className="mr-4">Categoria: {post.category}</span>
             <span className="mr-4">Autore: {post.author}</span>
             <span>
-              Tempo di lettura: {post.readTime?.value ?? ""}{" "}
-              {post.readTime?.unit ?? ""}
+              Tempo di lettura: {post.readTime?.value ?? ""} {post.readTime?.unit ?? ""}
             </span>
           </div>
-
+  
           {/* Contenuto del post */}
           <div
             className="prose max-w-none mb-8"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
-
+  
           {/* Sezione commenti */}
           <div className="mt-8">
             {comments.length > 0 ? (
               comments.map((comment) => (
                 <div
                   key={comment._id}
-                  className="bg-gray-300 p-4 rounded-lg mb-4 flex flex-col sm:flex-row sm:items-center"
+                  className="bg-gray-300 p-4 rounded-lg mb-4 flex flex-col sm:flex-row sm:items-start"
                 >
                   <AvatarProfilo
                     userData={userData}
-                    className="mr-4 mb-4 sm:mb-0"
+                    className="mb-4 sm:mb-0 sm:mr-4"
                   />
                   <div className="flex-grow">
                     <h3 className="font-semibold">{comment.name}</h3>
@@ -264,7 +263,7 @@ export default function PostDetail({ posts, setPosts }) {
                   </div>
                   <button
                     onClick={() => handleDeleteComment(comment._id)}
-                    className="mt-2 sm:mt-0 sm:ml-4 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full"
+                    className="mt-2 sm:mt-0 sm:ml-4 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center"
                   >
                     <TrashIcon className="h-6 w-6 text-[#153448]" />
                   </button>
@@ -281,7 +280,7 @@ export default function PostDetail({ posts, setPosts }) {
               >
                 <ChatBubbleOvalLeftEllipsisIcon className="w-8" />
               </button>
-
+  
               {/* Pulsante per modificare il post */}
               <button
                 onClick={handleEditClick}
@@ -293,7 +292,7 @@ export default function PostDetail({ posts, setPosts }) {
           </div>
         </div>
       </article>
-
+  
       {/* Modal per aggiungere un commento */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
@@ -329,14 +328,12 @@ export default function PostDetail({ posts, setPosts }) {
           </div>
         </div>
       )}
-
+  
       {/* Modal per modificare il post */}
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
           <div className="relative p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">
-              Modifica Post
-            </h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Modifica Post</h3>
             <form onSubmit={handleEditSubmit}>
               <input
                 type="text"
@@ -378,5 +375,5 @@ export default function PostDetail({ posts, setPosts }) {
         </div>
       )}
     </div>
-  );
+  );  
 }

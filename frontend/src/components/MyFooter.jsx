@@ -2,7 +2,7 @@ import { Footer, FooterCopyright, FooterLink, FooterLinkGroup } from "flowbite-r
 
 export default function MyFooter() {
   return (
-    <Footer className="fixed bottom-0 left-0 w-full bg-[#153448] dark:bg-black h-24">
+    <Footer className="bg-[#153448] dark:bg-black h-24">
       <div className="container mx-auto flex justify-between items-center h-full px-4">
         <FooterCopyright href="#" by="The Blog App" year={2022} />
         <FooterLinkGroup className="flex space-x-4">
