@@ -91,7 +91,18 @@ export default function CreatePost() {
       }
 
       // Invia i dati del post al backend
-      await createPost(formData);
+      const response = await createPost(formData);
+      console.log("Risposta del server:", response);
+
+      setPost({
+        title: "",
+        category: "",
+        content: "",
+        readTime: { value: 0, unit: "minutes" },
+        author: post.author, // Mantieni l'email dell'autore
+      });
+
+      alert("Post creato con successo!");
       // Naviga alla home page dopo la creazione del post
       navigate("/home");
     } catch (error) {
