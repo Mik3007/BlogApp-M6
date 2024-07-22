@@ -12,6 +12,7 @@ import MyFooter from "./components/MyFooter";
 import { useState } from "react";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Error from "./pages/Error";
 
 // Definisce il componente principale App
 function App() {
@@ -45,6 +46,8 @@ function App() {
             {/* Route per la pagina di dettaglio di un post
                 :id è un parametro dinamico che rappresenta l'ID del post */}
             <Route path="/post/:id" element={<PostDetail />} />
+
+            <Route path='*' element={<Error />} />
           </Routes>
  
         </main>
