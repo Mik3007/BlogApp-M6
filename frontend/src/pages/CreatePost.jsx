@@ -40,10 +40,7 @@ export default function CreatePost() {
         setPost((prevPost) => ({ ...prevPost, author: userData.email }));
       } catch (error) {
         console.error("Errore nel recupero dei dati utente:", error);
-        setPost((prevPost) => ({
-          ...prevPost,
-          author: "Email non disponibile",
-        }));
+        setPost(prevPost => ({ ...prevPost, author: 'Email non disponibile' }));
       }
     };
     fetchUserEmail();
@@ -108,175 +105,133 @@ export default function CreatePost() {
       navigate("/home");
     } catch (error) {
       console.error("Errore nella creazione del post:", error);
-      alert(
-        "Errore nella creazione del post. Controlla la console per i dettagli."
-      );
+      alert("Errore nella creazione del post. Controlla la console per i dettagli.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <article className="bg-white shadow-lg rounded-lg overflow-hidden">
-        {/* Immagine di copertura del post */}
-        <img
-          src={post.cover}
-          alt={post.title}
-          className="w-full h-64 object-cover sm:h-48"
-        />
-
-        <div className="p-6">
-          {/* Titolo del post */}
-          <h1 className="text-3xl font-bold mb-4 sm:text-2xl">{post.title}</h1>
-
-          {/* Dati del post */}
-          <div className="flex flex-wrap text-sm text-gray-600 mb-4">
-            <span className="mr-4">Categoria: {post.category}</span>
-            <span className="mr-4">Autore: {post.author}</span>
-            <span>
-              Tempo di lettura: {post.readTime?.value ?? ""}{" "}
-              {post.readTime?.unit ?? ""}
-            </span>
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="container max-w-4xl mx-auto my-8 text-[#000000] rounded-lg shadow-xl overflow-hidden bg-[#153448] p-6"
+    >
+      <h1 className="text-3xl text-center py-6 italic text-[#DFD0B8] font-semibold animate-pulse">
+        New Post
+      </h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:space-x-4">
+          <div className="flex-1">
+            <label
+              className="block text-[#DFD0B8] text-sm font-bold mb-2"
+              htmlFor="title"
+            >
+              Title
+            </label>
+            <input
+              className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8] bg-white text-black"
+              type="text"
+              id="title"
+              name="title"
+              value={post.title}
+              onChange={handleChange}
+              required
+            />
           </div>
 
-          {/* Contenuto del post */}
-          <div
-            className="prose max-w-none mb-8"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+          <div className="w-full sm:w-1/3 mt-4 sm:mt-0">
+            <label
+              className="block text-[#DFD0B8] text-sm font-bold mb-2"
+              htmlFor="category"
+            >
+              Category
+            </label>
+            <select
+              className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8] bg-white text-black"
+              id="category"
+              name="category"
+              value={post.category}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select a category</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label
+            className="block text-[#DFD0B8] text-sm font-bold mb-2"
+            htmlFor="cover"
+          >
+            Cover Image
+          </label>
+          <input
+            className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8] bg-white text-black"
+            type="file"
+            id="cover"
+            name="cover"
+            onChange={handleFileChange}
+            required
           />
-
-          {/* Sezione commenti */}
-          <div className="mt-8">
-            {comments.length > 0 ? (
-              comments.map((comment) => (
-                <div
-                  key={comment._id}
-                  className="bg-gray-300 p-4 rounded-lg mb-4 flex flex-col sm:flex-row sm:w-full"
-                >
-                  <AvatarProfilo
-                    userData={userData}
-                    className="mr-4 mb-4 sm:mb-0"
-                  />
-                  <div className="flex-grow">
-                    <h3 className="font-semibold">{comment.name}</h3>
-                    <p className="text-gray-700">{comment.content}</p>
-                  </div>
-                  <button
-                    onClick={() => handleDeleteComment(comment._id)}
-                    className="mt-2 sm:mt-0 sm:ml-4 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full"
-                  >
-                    <TrashIcon className="h-6 w-6 text-[#153448]" />
-                  </button>
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-600">Ancora nessun commento</p>
-            )}
-            <div className="flex justify-between mt-3">
-              {/* Pulsante per aprire la modale dei commenti */}
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full flex"
-              >
-                <ChatBubbleOvalLeftEllipsisIcon className="w-8" />
-              </button>
-
-              {/* Pulsante per modificare il post */}
-              <button
-                onClick={handleEditClick}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold p-2 rounded-full"
-              >
-                <PencilIcon className="w-8" />
-              </button>
-            </div>
-          </div>
         </div>
-      </article>
 
-      {/* Modal per aggiungere un commento */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
-          <div className="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">
-              <ChatBubbleOvalLeftEllipsisIcon className="w-8" />
-            </h3>
-            <form onSubmit={handleCommentSubmit} className="mt-2">
-              <textarea
-                name="content"
-                value={newComment.content}
-                onChange={handleCommentChange}
-                placeholder="Il tuo commento"
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md mb-3 h-24"
-              ></textarea>
-              <div className="flex justify-end space-x-2">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
-                >
-                  Chiudi
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Invia commento
-                </button>
-              </div>
-            </form>
-          </div>
+        <div>
+          <label
+            className="block text-[#DFD0B8] text-sm font-bold mb-2"
+            htmlFor="content"
+          >
+            Content
+          </label>
+          <textarea
+            className="w-full p-2 border border-gray-400 rounded h-32 focus:outline-none focus:border-[#DFD0B8] bg-white text-black"
+            id="content"
+            name="content"
+            value={post.content}
+            onChange={handleChange}
+            required
+          />
         </div>
-      )}
 
-      {/* Modal per modificare il post */}
-      {isEditModalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
-          <div className="relative p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">
-              Modifica Post
-            </h3>
-            <form onSubmit={handleEditSubmit}>
-              <input
-                type="text"
-                name="title"
-                value={editedPost.title}
-                onChange={handleEditChange}
-                className="w-full px-3 py-2 border rounded mb-3"
-              />
-              <textarea
-                name="content"
-                value={editedPost.content}
-                onChange={handleEditChange}
-                className="w-full px-3 py-2 border rounded mb-3 h-64"
-              />
-              <div className="flex justify-between">
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                  Salva
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setIsEditModalOpen(false)}
-                  className="bg-gray-500 text-white px-4 py-2 rounded"
-                >
-                  Annulla
-                </button>
-                <button
-                  type="button"
-                  onClick={handleDeletePost}
-                  className="bg-red-500 text-white px-4 py-2 rounded"
-                >
-                  Elimina Post
-                </button>
-              </div>
-            </form>
-          </div>
+        <div>
+          <label
+            className="block text-[#DFD0B8] text-sm font-bold mb-2"
+            htmlFor="readTimeValue"
+          >
+            Read time (minutes)
+          </label>
+          <input
+            className="w-full sm:w-32 p-2 border border-gray-400 rounded focus:outline-none focus:border-[#DFD0B8] bg-white text-black"
+            type="number"
+            id="readTimeValue"
+            name="readTimeValue"
+            value={post.readTime.value}
+            onChange={handleChange}
+            required
+          />
         </div>
-      )}
-    </div>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          type="submit"
+          disabled={isLoading}
+          className={`w-full font-bold py-2 px-4 rounded focus:outline-none transition duration-300 ${
+            isLoading
+              ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+              : "bg-[#DFD0B8] text-[#153448] hover:bg-[#C0A58E]"
+          }`}
+        >
+          {isLoading ? "Creating Post..." : "Create Post"}
+        </motion.button>
+      </form>
+    </motion.div>
   );
 }
