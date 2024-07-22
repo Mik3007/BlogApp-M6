@@ -23,12 +23,12 @@ function App() {
   return (
     // Router avvolge l'intera applicazione, abilitando il routing
     <Router>
-      <div className="App">
+      <div className="flex flex-col min-h-screen">
         {/* Navbar è renderizzato in tutte le pagine */}
         <Navbar setPosts={setPosts} setFilteredPosts={setFilteredPosts} />
 
         {/* Il tag main contiene il contenuto principale che cambia in base al routing */}
-        <main>
+        <main className="flex-grow">
           {/* Routes definisce le diverse rotte dell'applicazione */}
           <Routes>
             {/* rotta per la registrazione dell'utente */}
