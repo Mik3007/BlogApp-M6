@@ -36,6 +36,7 @@ function App() {
 
             {/* rotta per il login utente */}
             <Route path="/" element={<Login />} />
+            <Route path="/login" element={<Login />} />
 
             {/* Route per la home page */}
             <Route path="/home" element={<Home posts={filteredPosts} setPosts={setPosts} />}/>

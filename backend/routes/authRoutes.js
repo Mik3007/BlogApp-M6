@@ -4,7 +4,7 @@ import { generateJWT } from "../utils/jwt.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import passport from "../config/passportConfig.js";
 
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173" || "https://blogapp-omega-vert.vercel.app";
 
 const router = express.Router();
 
@@ -63,10 +63,10 @@ async function handleAuthCallback(req, res) {
   try {
     const token = await generateJWT({ id: req.user._id });
     // Usa FRONTEND_URL per il reindirizzamento
-    res.redirect(`${FRONTEND_URL}/login?token=${token}`);
+    res.redirect(`${FRONTEND_URL}/?token=${token}`);
   } catch (error) {
     console.error('Errore nella generazione del token:', error);
-    res.redirect(`${FRONTEND_URL}/login?error=auth_failed`);
+    res.redirect(`${FRONTEND_URL}/?error=auth_failed`);
   }
 }
 
