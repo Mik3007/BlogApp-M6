@@ -28,6 +28,7 @@ export default function CreatePost() {
 
   // Stato per memorizzare il file di copertura
   const [coverFile, setCoverFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Effetto per recuperare l'email dell'utente al momento del montaggio del componente
   useEffect(() => {
@@ -69,7 +70,7 @@ export default function CreatePost() {
   // Gestore per l'invio del form
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setIsLoading(true);
     try {
       console.log("Dati del post da inviare:", post);
       // Creazione di un oggetto FormData per inviare i dati del post e il file
@@ -107,6 +108,8 @@ export default function CreatePost() {
       navigate("/home");
     } catch (error) {
       console.error("Errore nella creazione del post:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -123,7 +126,10 @@ export default function CreatePost() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:space-x-4">
           <div className="flex-1">
-            <label className="block text-[#DFD0B8] text-sm font-bold mb-2" htmlFor="title">
+            <label
+              className="block text-[#DFD0B8] text-sm font-bold mb-2"
+              htmlFor="title"
+            >
               Title
             </label>
             <input
@@ -138,7 +144,10 @@ export default function CreatePost() {
           </div>
 
           <div className="w-full sm:w-1/3 mt-4 sm:mt-0">
-            <label className="block text-[#DFD0B8] text-sm font-bold mb-2" htmlFor="category">
+            <label
+              className="block text-[#DFD0B8] text-sm font-bold mb-2"
+              htmlFor="category"
+            >
               Category
             </label>
             <select
@@ -160,7 +169,10 @@ export default function CreatePost() {
         </div>
 
         <div>
-          <label className="block text-[#DFD0B8] text-sm font-bold mb-2" htmlFor="cover">
+          <label
+            className="block text-[#DFD0B8] text-sm font-bold mb-2"
+            htmlFor="cover"
+          >
             Cover Image
           </label>
           <input
@@ -174,7 +186,10 @@ export default function CreatePost() {
         </div>
 
         <div>
-          <label className="block text-[#DFD0B8] text-sm font-bold mb-2" htmlFor="content">
+          <label
+            className="block text-[#DFD0B8] text-sm font-bold mb-2"
+            htmlFor="content"
+          >
             Content
           </label>
           <textarea
@@ -188,7 +203,10 @@ export default function CreatePost() {
         </div>
 
         <div>
-          <label className="block text-[#DFD0B8] text-sm font-bold mb-2" htmlFor="readTimeValue">
+          <label
+            className="block text-[#DFD0B8] text-sm font-bold mb-2"
+            htmlFor="readTimeValue"
+          >
             Read time (minutes)
           </label>
           <input
