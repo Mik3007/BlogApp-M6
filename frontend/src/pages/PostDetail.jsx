@@ -139,6 +139,7 @@ export default function PostDetail() {
     try {
       await deletePost(post._id);
       console.log(`Post eliminato con successo: ${post._id}`);
+      setPost(prevPosts => prevPosts.filter(post => post._id !== postId));
       navigate("/home");
     } catch (error) {
       console.error(
