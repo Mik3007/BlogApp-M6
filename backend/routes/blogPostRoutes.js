@@ -63,8 +63,8 @@ router.post("/", cloudinaryUploader.single("cover"), async (req, res) => {
     }
 
     // Gestione del campo author
-    if (!postData.author || postData.author === "undefined") {
-      postData.author = "Autore anonimo"; // O qualsiasi altro valore di default
+    if (!postData.author) {
+      return res.status(400).json({ message: "L'autore è obbligatorio" });
     }
     const newPost = new BlogPost(postData);
     await newPost.save();

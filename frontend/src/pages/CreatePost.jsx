@@ -40,7 +40,7 @@ export default function CreatePost() {
         setPost((prevPost) => ({ 
           ...prevPost, 
           author: `${userData.nome} ${userData.cognome}`,
-          authorEmail: userData.email // Aggiungiamo anche l'email separatamente
+          authorEmail: userData.email 
         }));
       } catch (error) {
         console.error("Errore nel recupero dei dati utente:", error);

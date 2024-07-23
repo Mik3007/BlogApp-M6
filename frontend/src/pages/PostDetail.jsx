@@ -20,26 +20,6 @@ import {
   PencilIcon,
 } from "@heroicons/react/24/solid";
 
-// Funzione per visualizzare l'avatar dell'utente
-function AvatarProfilo({ userData }) {
-  // Usa la prima lettera del nome come avatar se l'immagine non è disponibile
-  const iniziale = userData?.nome ? userData.nome[0].toUpperCase() : "?";
-
-  return (
-    <div className="w-10 h-10 rounded-full me-3 flex items-center justify-center bg-white border border-gray-300">
-      {userData?.avatar ? (
-        <img
-          className="w-full h-full rounded-full object-cover"
-          src={userData.avatar}
-          alt="immagine profilo"
-        />
-      ) : (
-        <span className="text-black font-bold">{iniziale}</span>
-      )}
-    </div>
-  );
-}
-
 export default function PostDetail({ posts, setPosts }) {
   // Stati per memorizzare i dati del post, dei commenti e dell'utente
   const [post, setPost] = useState(null);

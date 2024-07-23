@@ -65,7 +65,7 @@ function PostCard({ post }) {
             className="text-gray-600 truncate"
             title={`Autore: ${post.author}`}
           >
-            Autore: {post.author}
+            Autore: {post.author || "Autore sconosciuto"}
           </p>
         </div>
       </Link>

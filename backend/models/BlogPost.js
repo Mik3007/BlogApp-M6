@@ -24,6 +24,7 @@ const blogPostSchema = new mongoose.Schema(
       unit: { type: String, required: true },
     },
     author: { type: String, },
+    authorEmail: { type: String, required: true },
     content: { type: String, required: true },
     comments: [commentSchema], // Array di commenti, incorporato
   },
