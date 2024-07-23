@@ -45,23 +45,19 @@ router.get("/:id", async (req, res) => {
 router.use(authMiddleware);
 
 // POST /blogPosts: crea un nuovo blog post con l'upload dell'immagine di copertura
-router.post("/", cloudinaryUploader.single("cover"), async (req, res) => {
+router.post("/", authMiddleware, cloudinaryUploader.single("cover"), async (req, res) => {
   try {
     const postData = req.body;
     if (req.file) {
-      postData.cover = req.file.path; // Cloudinary restituirà direttamente l'URL dell'immagine
+      postData.cover = req.file.path;
     }
-    // Verifica che tutti i campi obbligatori siano presenti
-    // Validazione dei campi
-    postData.author = req.author ? `${req.author.nome} ${req.author.cognome}` : "Autore sconosciuto";
-    postData.authorEmail = req.author ? req.author.email : "email@sconosciuta.com";
-
-    console.log("Dati del post prima del salvataggio:", postData);
+    
+    // Usa i dati dell'autore autenticato
+    postData.author = `${req.author.nome} ${req.author.cognome}`;
+    postData.authorEmail = req.author.email;
 
     const newPost = new BlogPost(postData);
     await newPost.save();
-
-    console.log("Nuovo post salvato:", newPost);
 
     // -- COMMENTATO PER NON DARE PROBLEMI ALLA CREAZIONE DEL POST
     // Invia una mail all'autore del post
