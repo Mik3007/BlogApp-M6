@@ -88,6 +88,8 @@ export default function CreatePost() {
         }
       });
 
+      console.log("Dati del post prima dell'invio:", Object.fromEntries(formData));
+
       // Aggiunge il file di copertura se presente
       if (coverFile) {
         formData.append("cover", coverFile);

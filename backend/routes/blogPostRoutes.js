@@ -53,23 +53,15 @@ router.post("/", cloudinaryUploader.single("cover"), async (req, res) => {
     }
     // Verifica che tutti i campi obbligatori siano presenti
     // Validazione dei campi
-    if (
-      !postData.title ||
-      !postData.category ||
-      !postData.content ||
-      !postData.readTime
-    ) {
-      return res.status(400).json({ message: "Campi obbligatori mancanti" });
-    }
+    postData.author = req.author ? `${req.author.nome} ${req.author.cognome}` : "Autore sconosciuto";
+    postData.authorEmail = req.author ? req.author.email : "email@sconosciuta.com";
 
-    // Gestione del campo author
-    if (!postData.author) {
-      return res.status(400).json({ message: "L'autore è obbligatorio" });
-    }
+    console.log("Dati del post prima del salvataggio:", postData);
+
     const newPost = new BlogPost(postData);
     await newPost.save();
 
-    console.log("Nuovo post creato con successo:", newPost);
+    console.log("Nuovo post salvato:", newPost);
 
     // -- COMMENTATO PER NON DARE PROBLEMI ALLA CREAZIONE DEL POST
     // Invia una mail all'autore del post
