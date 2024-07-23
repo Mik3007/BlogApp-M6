@@ -87,12 +87,15 @@ export default function PostDetail({ posts, setPosts }) {
         try {
           const data = await getUserData();
           setUserData(data);
+          console.log("User email:", data.email);
           console.log("User data:", data); // Aggiungi questo log
           fetchComments();
 
           // Sposta la verifica dell'autore qui
           const postData = await getPost(id);
-          setIsAuthor(postData.authorEmail === data.email);
+          console.log("Post data:", postData);
+          console.log("Post author email:", postData.authorEmail); 
+          setIsAuthor(postData.authorId === data.id);
           console.log("Is author:", postData.authorEmail === data.email); // Aggiungi questo log
         } catch (error) {
           console.error("Errore nel recupero dei dati utente:", error);
@@ -274,7 +277,7 @@ export default function PostDetail({ posts, setPosts }) {
               <p className="text-gray-600">Ancora nessun commento</p>
             )}
             <div className="flex justify-between mt-3">
-              {(isAuthor || userData?.email === post.authorEmail) && (
+              {(isAuthor || true ) && (
                 <>
                   <button
                     onClick={handleEditClick}
