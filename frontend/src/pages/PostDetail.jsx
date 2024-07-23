@@ -20,26 +20,6 @@ import {
   PencilIcon,
 } from "@heroicons/react/24/solid";
 
-// Funzione per visualizzare l'avatar dell'utente
-function AvatarProfilo({ userData }) {
-  // Usa la prima lettera del nome come avatar se l'immagine non è disponibile
-  const iniziale = userData?.nome ? userData.nome[0].toUpperCase() : "?";
-
-  return (
-    <div className="w-10 h-10 rounded-full me-3 flex items-center justify-center bg-white border border-gray-300">
-      {userData?.avatar ? (
-        <img
-          className="w-full h-full rounded-full object-cover"
-          src={userData.avatar}
-          alt="immagine profilo"
-        />
-      ) : (
-        <span className="text-black font-bold">{iniziale}</span>
-      )}
-    </div>
-  );
-}
-
 export default function PostDetail({ posts, setPosts }) {
   // Stati per memorizzare i dati del post, dei commenti e dell'utente
   const [post, setPost] = useState(null);
@@ -65,7 +45,10 @@ export default function PostDetail({ posts, setPosts }) {
         const postData = await getPost(id);
         setPost(postData);
         setEditedPost(postData);
-        console.log("Post data:", postData);
+        if (userData) {
+          // Verifica se l'email dell'autore del post corrisponde all'email dell'utente loggato
+          setIsAuthor(postData.authorEmail === userData.email);
+        }
       } catch (error) {
         console.error("Errore nel caricamento del post:", error);
       }
@@ -87,16 +70,7 @@ export default function PostDetail({ posts, setPosts }) {
         try {
           const data = await getUserData();
           setUserData(data);
-          console.log("User email:", data.email);
-          console.log("User data:", data); // Aggiungi questo log
           fetchComments();
-
-          // Sposta la verifica dell'autore qui
-          const postData = await getPost(id);
-          console.log("Post data:", postData);
-          console.log("Post author email:", postData.authorEmail); 
-          setIsAuthor(postData.authorId === data.id);
-          console.log("Is author:", postData.authorEmail === data.email); // Aggiungi questo log
         } catch (error) {
           console.error("Errore nel recupero dei dati utente:", error);
           setIsLoggedIn(false);
@@ -105,6 +79,7 @@ export default function PostDetail({ posts, setPosts }) {
         setIsLoggedIn(false);
       }
     };
+
     fetchPost();
     checkAuthAndFetchUserData();
   }, [id]);
@@ -145,7 +120,7 @@ export default function PostDetail({ posts, setPosts }) {
 
   // Gestore per l'eliminazione del post
   const handleDeletePost = async () => {
-    if (!post || !isAuthor) return;
+    if (!post) return;
     try {
       await deletePost(post._id);
       alert(`Post eliminato con successo: ${post._id}`);
@@ -277,7 +252,7 @@ export default function PostDetail({ posts, setPosts }) {
               <p className="text-gray-600">Ancora nessun commento</p>
             )}
             <div className="flex justify-between mt-3">
-              {(isAuthor || true ) && (
+              {isAuthor && (
                 <>
                   <button
                     onClick={handleEditClick}
