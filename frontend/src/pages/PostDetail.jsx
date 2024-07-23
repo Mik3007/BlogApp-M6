@@ -68,6 +68,7 @@ export default function PostDetail({ posts, setPosts }) {
 
         const token = localStorage.getItem("token");
         if (token) {
+          const userData = await getUserData();
           // Verifica se l'email dell'autore del post corrisponde all'email dell'utente loggato
           setIsAuthor(postData.authorEmail === userData.email);
         }
@@ -93,6 +94,7 @@ export default function PostDetail({ posts, setPosts }) {
           const data = await getUserData();
           setUserData(data);
           fetchComments();
+          await fetchPost()
         } catch (error) {
           console.error("Errore nel recupero dei dati utente:", error);
           setIsLoggedIn(false);
@@ -102,7 +104,6 @@ export default function PostDetail({ posts, setPosts }) {
       }
     };
 
-    fetchPost();
     checkAuthAndFetchUserData();
   }, [id]);
 
