@@ -37,14 +37,18 @@ export default function CreatePost() {
         // Recupera i dati dell'utente
         const userData = await getMe();
         // Aggiorna il campo 'author' con l'email dell'utente
-        setPost((prevPost) => ({ ...prevPost, author: userData.email }));
+        setPost((prevPost) => ({ 
+          ...prevPost, 
+          author: `${userData.nome} ${userData.cognome}`,
+          authorEmail: userData.email // Aggiungiamo anche l'email separatamente
+        }));
       } catch (error) {
         console.error("Errore nel recupero dei dati utente:", error);
         setPost(prevPost => ({ ...prevPost, author: 'Email non disponibile' }));
       }
     };
     fetchUserEmail();
-  }, [navigate]);
+  }, []);
 
   // Gestore per i cambiamenti nei campi del form
   const handleChange = (e) => {

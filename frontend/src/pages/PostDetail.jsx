@@ -67,7 +67,10 @@ export default function PostDetail({ posts, setPosts }) {
         setEditedPost(postData);
         if (userData) {
           // Verifica se l'email dell'autore del post corrisponde all'email dell'utente loggato
-          setIsAuthor(postData.authorEmail === userData.email);
+          setIsAuthor(
+            postData.authorEmail === userData.email ||
+              postData.author === `${userData.nome} ${userData.cognome}`
+          );
         }
       } catch (error) {
         console.error("Errore nel caricamento del post:", error);
