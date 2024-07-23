@@ -65,7 +65,9 @@ export default function PostDetail({ posts, setPosts }) {
         const postData = await getPost(id);
         setPost(postData);
         setEditedPost(postData);
-        if (userData) {
+
+        const token = localStorage.getItem("token");
+        if (token) {
           // Verifica se l'email dell'autore del post corrisponde all'email dell'utente loggato
           setIsAuthor(postData.authorEmail === userData.email);
         }
@@ -140,7 +142,7 @@ export default function PostDetail({ posts, setPosts }) {
 
   // Gestore per l'eliminazione del post
   const handleDeletePost = async () => {
-    if (!post) return;
+    if (!post || !isAuthor) return;
     try {
       await deletePost(post._id);
       alert(`Post eliminato con successo: ${post._id}`);
@@ -254,20 +256,18 @@ export default function PostDetail({ posts, setPosts }) {
                   key={comment._id}
                   className="bg-gray-300 p-4 rounded-lg mb-4 flex flex-col sm:flex-row sm:items-start"
                 >
-                  <AvatarProfilo
-                    userData={userData}
-                    className="mb-4 sm:mb-0 sm:mr-4"
-                  />
                   <div className="flex-grow">
                     <h3 className="font-semibold">{comment.name}</h3>
                     <p className="text-gray-700">{comment.content}</p>
                   </div>
-                  <button
-                    onClick={() => handleDeleteComment(comment._id)}
-                    className="mt-2 sm:mt-0 sm:ml-4 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center"
-                  >
-                    <TrashIcon className="h-6 w-6 text-[#153448]" />
-                  </button>
+                  {isAuthor && (
+                    <button
+                      onClick={() => handleDeleteComment(comment._id)}
+                      className="mt-2 sm:mt-0 sm:ml-4 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center"
+                    >
+                      <TrashIcon className="h-6 w-6 text-[#153448]" />
+                    </button>
+                  )}
                 </div>
               ))
             ) : (
