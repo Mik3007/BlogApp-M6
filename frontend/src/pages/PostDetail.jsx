@@ -20,6 +20,26 @@ import {
   PencilIcon,
 } from "@heroicons/react/24/solid";
 
+// Funzione per visualizzare l'avatar dell'utente
+function AvatarProfilo({ userData }) {
+  // Usa la prima lettera del nome come avatar se l'immagine non è disponibile
+  const iniziale = userData?.nome ? userData.nome[0].toUpperCase() : "?";
+
+  return (
+    <div className="w-10 h-10 rounded-full me-3 flex items-center justify-center bg-white border border-gray-300">
+      {userData?.avatar ? (
+        <img
+          className="w-full h-full rounded-full object-cover"
+          src={userData.avatar}
+          alt="immagine profilo"
+        />
+      ) : (
+        <span className="text-black font-bold">{iniziale}</span>
+      )}
+    </div>
+  );
+}
+
 export default function PostDetail({ posts, setPosts }) {
   // Stati per memorizzare i dati del post, dei commenti e dell'utente
   const [post, setPost] = useState(null);
@@ -238,14 +258,12 @@ export default function PostDetail({ posts, setPosts }) {
                     <h3 className="font-semibold">{comment.name}</h3>
                     <p className="text-gray-700">{comment.content}</p>
                   </div>
-                  {isAuthor && (
-                    <button
-                      onClick={() => handleDeleteComment(comment._id)}
-                      className="mt-2 sm:mt-0 sm:ml-4 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center"
-                    >
-                      <TrashIcon className="h-6 w-6 text-[#153448]" />
-                    </button>
-                  )}
+                  <button
+                    onClick={() => handleDeleteComment(comment._id)}
+                    className="mt-2 sm:mt-0 sm:ml-4 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center"
+                  >
+                    <TrashIcon className="h-6 w-6 text-[#153448]" />
+                  </button>
                 </div>
               ))
             ) : (

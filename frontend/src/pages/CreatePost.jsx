@@ -34,15 +34,13 @@ export default function CreatePost() {
   useEffect(() => {
     const fetchUserEmail = async () => {
       try {
+        // Recupera i dati dell'utente
         const userData = await getMe();
-        setPost((prevPost) => ({ 
-          ...prevPost, 
-          author: `${userData.nome} ${userData.cognome}`,
-          authorEmail: userData.email 
-        }));
+        // Aggiorna il campo 'author' con l'email dell'utente
+        setPost((prevPost) => ({ ...prevPost, author: userData.email }));
       } catch (error) {
         console.error("Errore nel recupero dei dati utente:", error);
-        setPost(prevPost => ({ ...prevPost, author: 'Autore sconosciuto' }));
+        setPost(prevPost => ({ ...prevPost, author: 'Email non disponibile' }));
       }
     };
     fetchUserEmail();
