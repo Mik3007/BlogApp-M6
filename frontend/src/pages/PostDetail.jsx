@@ -280,7 +280,7 @@ export default function PostDetail({ posts, setPosts }) {
         </div>
       </article>
 
-      {isModalOpen && (
+      {isAuthor && isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
           <div className="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
